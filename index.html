@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Air Freight Shipping Cost Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+
+    .calculator {
+      max-width: 420px;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    h2 {
+      font-size: 18px;
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 6px;
+      font-size: 14px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 10px;
+      font-size: 15px;
+      background: #000000;
+      color: #ffffff;
+      border: none;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="calculator">
+    <h2>Air Freight Shipping Cost Calculator</h2>
+
+    <label>Length (inches)</label>
+    <input type="number" id="length" />
+
+    <label>Width (inches)</label>
+    <input type="number" id="width" />
+
+    <label>Height (inches)</label>
+    <input type="number" id="height" />
+
+    <label>Actual Weight (kg)</label>
+    <input type="number" id="actualWeight" />
+
+    <label>
+      <input type="checkbox" id="homeDelivery" /> Add Home Delivery
+    </label>
+
+    <button onclick="calculateCost()">Calculate Cost</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    function calculateCost() {
+      const L = Number(document.getElementById('length').value);
+      const W = Number(document.getElementById('width').value);
+      const H = Number(document.getElementById('height').value);
+      const actual = Number(document.getElementById('actualWeight').value);
+
+      const volumetric = (L * W * H) / 366;
+      const chargeable = Math.max(actual, volumetric);
+      const ratePerKg = 15;
+      const usdToKes = 135;
+      const minimumCharge = 15;
+      const customsClearance = 5;
+
+      let costUsd = chargeable * ratePerKg;
+
+      if (costUsd < minimumCharge) {
+        costUsd = minimumCharge;
+      }
+
+      costUsd += customsClearance;
+
+      let deliveryKes = 0;
+
+      if (document.getElementById('homeDelivery').checked) {
+        deliveryKes = 450;
+      }
+
+      const costKes = (costUsd * usdToKes) + deliveryKes;
+
+      document.getElementById('result').innerHTML = `
+        Volumetric Weight: ${volumetric.toFixed(2)} kg<br>
+        Chargeable Weight: ${chargeable.toFixed(2)} kg<br>
+        Total Cost: $${costUsd.toFixed(2)}<br>
+        Total Cost (KES): ${costKes.toFixed(0)}
+      `;
+    }
+  </script>
+
+</body>
+</html>
