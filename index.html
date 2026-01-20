@@ -57,6 +57,21 @@
 <body>
 
   <div class="calculator">
+    <h1 style="font-size:20px; margin-bottom:6px;">Your Business Name</h1>
+    <p style="font-size:13px; margin-bottom:16px;">
+      Air freight is billed using the higher of actual weight or volumetric weight.
+    </p>
+
+    <details style="font-size:13px; margin-bottom:16px;">
+      <summary style="cursor:pointer;">How the calculator works</summary>
+      <p>
+        Step 1: Actual weight must be in kilograms. If weight is in pounds, divide by 2.20462.<br><br>
+        Step 2: Volumetric weight (kg) = (Length × Width × Height in inches) ÷ 366.<br><br>
+        Step 3: Chargeable weight is the higher of actual weight or volumetric weight.<br><br>
+        Step 4: Air cost = Chargeable weight × $15.<br><br>
+        A minimum charge of $15 applies plus $5 customs clearance.
+      </p>
+    </details>
     <h2>Air Freight Shipping Cost Calculator</h2>
 
     <label>Length (inches)</label>
@@ -75,9 +90,19 @@
       <input type="checkbox" id="homeDelivery" /> Add Home Delivery
     </label>
 
+    <label>Display Currency</label>
+    <select id="currency">
+      <option value="USD">USD</option>
+      <option value="KES">KES</option>
+    </select>
+
     <button onclick="calculateCost()">Calculate Cost</button>
 
     <div class="result" id="result"></div>
+
+    <a id="whatsappBtn" target="_blank" style="display:none; margin-top:16px; display:block; text-align:center; background:#25D366; color:#ffffff; padding:10px; text-decoration:none;">
+      Get Quote on WhatsApp
+    </a>
   </div>
 
   <script>
@@ -105,17 +130,47 @@
       let deliveryKes = 0;
 
       if (document.getElementById('homeDelivery').checked) {
-        deliveryKes = 450;
+        if (chargeable <= 5) {
+          deliveryKes = 450;
+        } else {
+          const extraKg = chargeable - 5;
+          deliveryKes = 450 + (extraKg * 75);
+        }
       }
 
       const costKes = (costUsd * usdToKes) + deliveryKes;
 
-      document.getElementById('result').innerHTML = `
-        Volumetric Weight: ${volumetric.toFixed(2)} kg<br>
-        Chargeable Weight: ${chargeable.toFixed(2)} kg<br>
-        Total Cost: $${costUsd.toFixed(2)}<br>
-        Total Cost (KES): ${costKes.toFixed(0)}
-      `;
+      const currency = document.getElementById('currency').value;
+
+      let resultText = '';
+
+      if (currency === 'USD') {
+        resultText = `
+          Volumetric Weight: ${volumetric.toFixed(2)} kg<br>
+          Chargeable Weight: ${chargeable.toFixed(2)} kg<br>
+          Air Freight + Clearance: $${costUsd.toFixed(2)}<br>
+          Delivery: KES ${deliveryKes.toFixed(0)}<br>
+          Total Payable: KES ${costKes.toFixed(0)}
+        `;
+      } else {
+        resultText = `
+          Volumetric Weight: ${volumetric.toFixed(2)} kg<br>
+          Chargeable Weight: ${chargeable.toFixed(2)} kg<br>
+          Air Freight + Clearance: KES ${(costUsd * usdToKes).toFixed(0)}<br>
+          Delivery: KES ${deliveryKes.toFixed(0)}<br>
+          Total Payable: KES ${costKes.toFixed(0)}
+        `;
+      }
+
+      document.getElementById('result').innerHTML = resultText;
+
+      const message = `Air Freight Quote%0AChargeable Weight: ${chargeable.toFixed(2)} kg%0ATotal Cost: $${costUsd.toFixed(2)} (${costKes.toFixed(0)} KES)`;
+      const phone = '254700000000';
+      const whatsappLink = `https://wa.me/${phone}?text=${message}`;
+
+      const btn = document.getElementById('whatsappBtn');
+      btn.href = whatsappLink;
+      btn.style.display = 'block';
     }
   </script>
 
