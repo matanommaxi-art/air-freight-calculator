@@ -58,7 +58,6 @@
 
   <div class="calculator">
     <h1 style="font-size:20px; margin-bottom:6px;">MRAN LOGISTICS</h1>
-
     <p style="font-size:13px; margin-bottom:16px;">
       Air freight is billed using the higher of actual weight or volumetric weight.
     </p>
@@ -70,7 +69,10 @@
         Step 2: Volumetric weight (kg) = (Length × Width × Height in inches) ÷ 366.<br><br>
         Step 3: Chargeable weight is the higher of actual weight or volumetric weight.<br><br>
         Step 4: Air cost = Chargeable weight × $15.<br><br>
-        A minimum charge of $15 applies plus $5 customs clearance.
+        <strong>
+        Our air freight to Kenya service shipping rate is $15/KG based on the actual or volumetric weight of the package – whichever is higher. The minimum charge is $15.
+        </strong><br><br>
+        Plus $5 customs clearance.
       </p>
     </details>
     <h2>Air Freight Shipping Cost Calculator</h2>
@@ -143,27 +145,48 @@
 
       const currency = document.getElementById('currency').value;
 
+      const chargeableDisplay = `<span style="color:#0a7cff; font-weight:bold;">${chargeable.toFixed(2)} kg</span>`;
+
+      let deliveryBreakdown = 'No delivery selected';
+
+      if (deliveryKes > 0) {
+        if (chargeable <= 5) {
+          deliveryBreakdown = 'First 5 kg: KES 450';
+        } else {
+          const extraKg = chargeable - 5;
+          deliveryBreakdown = `First 5 kg: KES 450<br>Additional ${extraKg.toFixed(2)} kg × 75 = KES ${(extraKg * 75).toFixed(0)}`;
+        }
+      }
+
       let resultText = '';
 
       if (currency === 'USD') {
         resultText = `
           Volumetric Weight: ${volumetric.toFixed(2)} kg<br>
-          Chargeable Weight: ${chargeable.toFixed(2)} kg<br>
+          Chargeable Weight: ${chargeableDisplay}<br>
           Air Freight + Clearance: $${costUsd.toFixed(2)}<br>
           Delivery: KES ${deliveryKes.toFixed(0)}<br>
-          Total Payable: KES ${costKes.toFixed(0)}
+          <small>${deliveryBreakdown}</small><br>
+          <strong>Total Payable: KES ${costKes.toFixed(0)}</strong>
         `;
       } else {
         resultText = `
           Volumetric Weight: ${volumetric.toFixed(2)} kg<br>
-          Chargeable Weight: ${chargeable.toFixed(2)} kg<br>
+          Chargeable Weight: ${chargeableDisplay}<br>
           Air Freight + Clearance: KES ${(costUsd * usdToKes).toFixed(0)}<br>
           Delivery: KES ${deliveryKes.toFixed(0)}<br>
-          Total Payable: KES ${costKes.toFixed(0)}
+          <small>${deliveryBreakdown}</small><br>
+          <strong>Total Payable: KES ${costKes.toFixed(0)}</strong>
         `;
       }
 
-      document.getElementById('result').innerHTML = resultText;
+      let minimumNote = '';
+
+      if ((chargeable * ratePerKg) < minimumCharge) {
+        minimumNote = '<br><strong>Minimum charge applied</strong>';
+      }
+
+      document.getElementById('result').innerHTML = resultText + minimumNote;
 
       const message = `Air Freight Quote%0AChargeable Weight: ${chargeable.toFixed(2)} kg%0ATotal Cost: $${costUsd.toFixed(2)} (${costKes.toFixed(0)} KES)`;
       const phone = '254725041080';
