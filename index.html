@@ -188,7 +188,13 @@
 
       document.getElementById('result').innerHTML = resultText + minimumNote;
 
-      const message = `Air Freight Quote%0AChargeable Weight: ${chargeable.toFixed(2)} kg%0ATotal Cost: $${costUsd.toFixed(2)} (${costKes.toFixed(0)} KES)`;
+      const message =
+  'Our air freight to Kenya service shipping rate is $15/KG based on the actual or volumetric weight of the package – whichever is higher.%0A' +
+  'The minimum charge is $15.%0A' +
+  'Plus $5 customs clearance.%0A%0A' +
+  'Chargeable Weight: ' + chargeable.toFixed(2) + ' kg%0A' +
+  'Total Cost: $' + costUsd.toFixed(2) + ' (' + costKes.toFixed(0) + ' KES)';
+
       const phone = '254725041080';
       const whatsappLink = `https://wa.me/${phone}?text=${message}`;
 
