@@ -1,229 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Air Freight Shipping Cost Calculator</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      padding: 20px;
-    }
-
-    .calculator {
-      max-width: 420px;
-      background: #ffffff;
-      padding: 20px;
-      border-radius: 8px;
-    }
-
-    h2 {
-      font-size: 18px;
-      margin-bottom: 16px;
-    }
-
-    label {
-      display: block;
-      margin-top: 12px;
-      font-size: 14px;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 8px;
-      margin-top: 6px;
-      font-size: 14px;
-    }
-
-    button {
-      width: 100%;
-      margin-top: 20px;
-      padding: 10px;
-      font-size: 15px;
-      background: #000000;
-      color: #ffffff;
-      border: none;
-      cursor: pointer;
-    }
-
-    .result {
-      margin-top: 20px;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MRAN Logistics - Air Freight Calculator</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+  h1 { color: #0B3C5D; font-size: 22px; margin-bottom: 6px; }
+  .calculator { max-width: 600px; background: #fff; padding: 20px; border-radius: 8px; border-top: 6px solid #0B3C5D; }
+  label { display: block; margin-top: 10px; font-size: 14px; }
+  input, select, button { width: 100%; padding: 8px; margin-top: 6px; font-size: 14px; }
+  button { cursor: pointer; background: #0B3C5D; color: #fff; border: none; }
+  .result { margin-top: 20px; font-size: 14px; line-height: 1.6; }
+  .package-card { background: #e8f0f8; border: 1px solid #0B3C5D; border-radius: 6px; padding: 12px; margin-bottom: 12px; }
+  .package-card h3 { margin: 0 0 8px 0; font-size: 16px; color: #0B3C5D; }
+  .quote-card { background: #f1f1f1; border: 1px solid #0B3C5D; border-radius: 6px; padding: 12px; }
+  .tracking-section { margin-top: 10px; }
+  .error { color: red; margin-top: 10px; font-weight: bold; }
+  .add-package-btn { background: #E65100; margin-top: 10px; }
+</style>
 </head>
 <body>
 
-  <div class="calculator">
-    <h1 style="font-size:20px; margin-bottom:6px;">MRAN LOGISTICS</h1>
-    <p style="font-size:13px; margin-bottom:16px;">
-      Air freight is billed using the higher of actual weight or volumetric weight.
-    </p>
+<div class="calculator">
+  <h1>MRAN LOGISTICS</h1>
+  <p>Air freight is billed using the higher of actual weight or volumetric weight. Minimum charge $15 plus $5 customs clearance.</p>
 
-    <details style="font-size:13px; margin-bottom:16px;">
-      <summary style="cursor:pointer;">How the calculator works</summary>
-      <p>
-        Step 1: Actual weight must be in kilograms. If weight is in pounds, divide by 2.20462.<br><br>
-        Step 2: Volumetric weight (kg) = (Length × Width × Height in inches) ÷ 366.<br><br>
-        Step 3: Chargeable weight is the higher of actual weight or volumetric weight.<br><br>
-        Step 4: Air cost = Chargeable weight × $15.<br><br>
-        <strong>
-        Our air freight to Kenya service shipping rate is $15/KG based on the actual or volumetric weight of the package – whichever is higher. The minimum charge is $15.
-        </strong><br><br>
-        Plus $5 customs clearance.
-      </p>
-    </details>
+  <label>Client Name</label>
+  <input type="text" id="clientName" placeholder="Client name" />
 
-    <h2>Air Freight Shipping Cost Calculator</h2>
+  <label>
+    <input type="checkbox" id="homeDelivery" /> Add Home Delivery
+  </label>
 
-    <label>Length (inches)</label>
-    <input type="number" id="length" />
+  <label>Display Currency</label>
+  <select id="currency">
+    <option value="USD">USD</option>
+    <option value="KES">KES</option>
+  </select>
 
-    <label>Width (inches)</label>
-    <input type="number" id="width" />
+  <div id="packages"></div>
+  <button type="button" class="add-package-btn" onclick="addPackage()">+ Add Package</button>
 
-    <label>Height (inches)</label>
-    <input type="number" id="height" />
+  <button type="button" onclick="calculateCost()">Calculate Cost</button>
+  <div class="error" id="errorMsg"></div>
+  <div class="result" id="result"></div>
 
-    <label>Client Name</label>
-    <input type="text" id="clientName" placeholder="Client name" />
+  <button id="copyBtn" style="display:none; margin-top:10px;">Copy Quote</button>
+  <a id="whatsappBtn" target="_blank" style="display:none; margin-top:16px; display:block; text-align:center; background:#25D366; color:#fff; padding:10px; text-decoration:none;">
+    Get Quote on WhatsApp
+  </a>
+</div>
 
-    <label>Actual Weight (kg)</label>
-    <input type="number" id="actualWeight" />
+<script>
+const RATE_PER_KG = 15;
+const USD_TO_KES = 135;
+const MIN_CHARGE = 15;
+const CLEARANCE = 5;
 
-    <label>
-      <input type="checkbox" id="homeDelivery" /> Add Home Delivery
-    </label>
+function clearError(){ document.getElementById('errorMsg').innerText=''; }
 
-    <label>Display Currency</label>
-    <select id="currency">
-      <option value="USD">USD</option>
-      <option value="KES">KES</option>
-    </select>
+function addPackage(){
+  const pkgDiv = document.createElement('div');
+  pkgDiv.className = 'package-card package';
 
-    <button onclick="calculateCost()">Calculate Cost</button>
+  const index = document.querySelectorAll('#packages .package').length + 1;
 
-    <div class="result" id="result"></div>
+  pkgDiv.innerHTML = `
+    <h3>Package ${index}</h3>
+    <label>Length (inches)</label><input type="number" class="L" />
+    <label>Width (inches)</label><input type="number" class="W" />
+    <label>Height (inches)</label><input type="number" class="H" />
+    <label>Actual Weight (kg)</label><input type="number" class="A" />
+    <div class="tracking-section">
+      <label>Tracking Number</label><input type="text" class="T" placeholder="Tracking #">
+      <label>Store/Source</label><input type="text" class="S" placeholder="Store">
+      <label>Quantity</label><input type="number" class="Q" placeholder="Qty" min="1" />
+      <label>Description (max 30 chars)</label><input type="text" class="D" placeholder="Description" maxlength="30" />
+    </div>
+  `;
+  document.getElementById('packages').appendChild(pkgDiv);
+}
 
-    <button id="copyBtn" style="display:none; margin-top:10px; background:#0B3C5D;">Copy Quote</button>
+function showError(msg){ document.getElementById('errorMsg').innerText = msg; }
 
-    <a id="whatsappBtn" target="_blank" style="display:none; margin-top:16px; display:block; text-align:center; background:#25D366; color:#ffffff; padding:10px; text-decoration:none;">
-      Get Quote on WhatsApp
-    </a>
-  </div>
+function calculateCost(){
+  clearError();
+  const packages = document.querySelectorAll('#packages .package');
+  if(packages.length===0){ showError('Add at least one package'); return; }
 
-  <script>
-    function calculateCost() {
-      const L = Number(document.getElementById('length').value);
-      const W = Number(document.getElementById('width').value);
-      const H = Number(document.getElementById('height').value);
-      const actual = Number(document.getElementById('actualWeight').value);
+  let totalChargeable = 0;
+  let totalAirUSD = 0;
+  let breakdownHtml = '';
+  let trackingText = '';
 
-      const volumetric = (L * W * H) / 366;
-      const chargeable = Math.max(actual, volumetric);
-      const ratePerKg = 15;
-      const usdToKes = 135;
-      const minimumCharge = 15;
-      const customsClearance = 5;
+  for(let i=0;i<packages.length;i++){
+    const pkg = packages[i];
+    const L = Number(pkg.querySelector('.L').value);
+    const W = Number(pkg.querySelector('.W').value);
+    const H = Number(pkg.querySelector('.H').value);
+    const A = Number(pkg.querySelector('.A').value);
+    const T = pkg.querySelector('.T').value.trim() || 'Pending';
+    const S = pkg.querySelector('.S').value.trim() || 'N/A';
+    const Q = Number(pkg.querySelector('.Q').value) || 1;
+    const D = pkg.querySelector('.D').value.trim() || '';
 
-      let costUsd = chargeable * ratePerKg;
+    if(!L||!W||!H||!A||A<=0){ showError('Fill all fields correctly for each package'); return; }
 
-      if (costUsd < minimumCharge) {
-        costUsd = minimumCharge;
-      }
+    const volumetric = (L*W*H)/366;
+    const chargeable = Math.max(A, volumetric);
+    const airFreight = Math.max(chargeable*RATE_PER_KG, MIN_CHARGE);
 
-      costUsd += customsClearance;
+    totalChargeable += chargeable;
+    totalAirUSD += airFreight;
 
-      let deliveryKes = 0;
+    breakdownHtml += `
+      <strong>Package ${i+1}</strong><br>
+      Weight: ${A.toFixed(2)} KG<br>
+      Dimensions: ${L.toFixed(2)} x ${W.toFixed(2)} x ${H.toFixed(2)} inches<br>
+      Volumetric Weight: ${volumetric.toFixed(2)} KG<br>
+      Chargeable Weight: ${chargeable.toFixed(2)} KG<br>
+      Air Freight: $${airFreight.toFixed(2)} (Minimum $${MIN_CHARGE})<br>
+      Customs Clearance: $${CLEARANCE.toFixed(2)}<br>
+      Tracking: ${T}, Store: ${S}, Qty: ${Q}, Desc: ${D}<br><br>
+    `;
 
-      if (document.getElementById('homeDelivery').checked) {
-        if (chargeable <= 5) {
-          deliveryKes = 450;
-        } else {
-          const extraKg = chargeable - 5;
-          deliveryKes = 450 + (extraKg * 75);
-        }
-      }
+    trackingText += `Package ${i+1} - Tracking: ${T}, Store: ${S}, Qty: ${Q}, Desc: ${D}\n`;
+  }
 
-      const costKes = (costUsd * usdToKes) + deliveryKes;
-      const currency = document.getElementById('currency').value;
-
-      let deliveryBreakdown = 'No delivery selected';
-
-      if (deliveryKes > 0) {
-        if (chargeable <= 5) {
-          deliveryBreakdown = 'First 5 kg: KES 450';
-        } else {
-          const extraKg = chargeable - 5;
-          deliveryBreakdown = 'First 5 kg: KES 450<br>Additional ' + extraKg.toFixed(2) + ' kg × 75 = KES ' + (extraKg * 75).toFixed(0);
-        }
-      }
-
-      let resultText = '';
-
-      if (currency === 'USD') {
-        resultText = 'Volumetric Weight: ' + volumetric.toFixed(2) + ' kg<br>' +
-          'Chargeable Weight: <strong>' + chargeable.toFixed(2) + ' kg</strong><br>' +
-          'Air Freight + Clearance: $' + costUsd.toFixed(2) + '<br>' +
-          'Delivery: KES ' + deliveryKes.toFixed(0) + '<br>' +
-          '<small>' + deliveryBreakdown + '</small><br>' +
-          '<strong>Total Payable: KES ' + costKes.toFixed(0) + '</strong>';
-      } else {
-        resultText = 'Volumetric Weight: ' + volumetric.toFixed(2) + ' kg<br>' +
-          'Chargeable Weight: <strong>' + chargeable.toFixed(2) + ' kg</strong><br>' +
-          'Air Freight + Clearance: KES ' + (costUsd * usdToKes).toFixed(0) + '<br>' +
-          'Delivery: KES ' + deliveryKes.toFixed(0) + '<br>' +
-          '<small>' + deliveryBreakdown + '</small><br>' +
-          '<strong>Total Payable: KES ' + costKes.toFixed(0) + '</strong>';
-      }
-
-      document.getElementById('result').innerHTML = resultText;
-
-      const clientName = document.getElementById('clientName').value || 'Client';
-      const today = new Date().toLocaleDateString('en-GB');
-      const ref = 'MRAN-' + Date.now().toString().slice(-6);
-
-      let deliveryText = 'No delivery selected';
-
-      if (deliveryKes > 0) {
-        if (chargeable <= 5) {
-          deliveryText = 'Delivery: First 5 kg = KES 450';
-        } else {
-          const extraKg = chargeable - 5;
-          deliveryText = 'Delivery: First 5 kg = KES 450, Extra ' + extraKg.toFixed(2) + ' kg × 75 = KES ' + (extraKg * 75).toFixed(0);
-        }
-      }
-
-      const message =
-        'Hello ' + clientName + '\n\n' +
-        'Our air freight to Kenya service shipping rate is $15/KG based on the actual or volumetric weight of the package – whichever is higher.\n' +
-        'The minimum charge is $15.\n' +
-        'Plus $5 customs clearance.\n\n' +
-        'Chargeable Weight: ' + chargeable.toFixed(2) + ' kg\n' +
-        deliveryText + '\n' +
-        'Total Cost: $' + costUsd.toFixed(2) + ' (' + costKes.toFixed(0) + ' KES)\n\n' +
-        'Date: ' + today + '\n' +
-        'Reference: ' + ref;
-
-      const encodedMessage = encodeURIComponent(message);
-      const phone = '254725041080';
-      const whatsappLink = 'https://wa.me/' + phone + '?text=' + encodedMessage;
-
-      const btn = document.getElementById('whatsappBtn');
-      const copyBtn = document.getElementById('copyBtn');
-
-      btn.href = whatsappLink;
-      btn.style.display = 'block';
-      copyBtn.style.display = 'block';
-
-      copyBtn.onclick = function () {
-        navigator.clipboard.writeText(message);
-        copyBtn.innerText = 'Copied';
-      };
+  let deliveryKes = 0;
+  let deliveryBreakdown='';
+  if(document.getElementById('homeDelivery').checked){
+    if(totalChargeable<=5){ 
+      deliveryKes=450; 
+      deliveryBreakdown='Delivery: First 5 kg = KES450'; 
+    } else { 
+      const extra = totalChargeable-5; 
+      deliveryKes = 450 + extra*75; 
+      deliveryBreakdown=`Delivery: First 5kg=KES450, Extra ${extra.toFixed(2)}kg ×75=KES${(extra*75).toFixed(0)}`; 
     }
-  </script>
+  } else { deliveryBreakdown='No home delivery'; }
+
+  const costUsd = totalAirUSD + CLEARANCE;
+  const costKes = costUsd*USD_TO_KES + deliveryKes;
+
+  const clientName = document.getElementById('clientName').value || 'Client';
+  const currency = document.getElementById('currency').value;
+  const today = new Date().toLocaleDateString('en-GB');
+  const ref = 'MRAN-'+Date.now().toString().slice(-6);
+
+  document.getElementById('result').innerHTML = `
+    <div class="quote-card">
+      <h3>Shipping Quote</h3>
+      <strong>Client:</strong> ${clientName}<br>
+      <strong>Date:</strong> ${today}<br>
+      <strong>Reference:</strong> ${ref}<br><br>
+      ${breakdownHtml}
+      <strong>${deliveryBreakdown}</strong><br>
+      <strong>Total Payable:</strong> $${costUsd.toFixed(2)} / KES ${costKes.toFixed(0)}
+    </div>
+  `;
+
+  const message = `
+Hello ${clientName}
+
+${breakdownHtml.replace(/<br>/g,'\n')}
+${deliveryBreakdown}
+Total Cost: $${costUsd.toFixed(2)} / KES ${costKes.toFixed(0)}
+
+Tracking Info:
+${trackingText}
+
+Date: ${today}
+Reference: ${ref}
+`;
+
+  const phone = '254725041080';
+  const whatsappLink = 'https://wa.me/'+phone+'?text='+encodeURIComponent(message);
+  const whatsappBtn = document.getElementById('whatsappBtn');
+  whatsappBtn.href = whatsappLink;
+  whatsappBtn.style.display='block';
+
+  const copyBtn = document.getElementById('copyBtn');
+  copyBtn.style.display='block';
+  copyBtn.onclick = ()=>{ navigator.clipboard.writeText(message); copyBtn.innerText='Copied!'; setTimeout(()=>{copyBtn.innerText='Copy Quote';},2000); };
+}
+
+// Add first package by default
+addPackage();
+</script>
 
 </body>
 </html>
