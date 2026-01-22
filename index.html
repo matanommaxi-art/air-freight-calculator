@@ -6,26 +6,49 @@
 <title>MRAN Logistics - Air Freight Calculator</title>
 <style>
   body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
-  h1 { color: #0B3C5D; font-size: 22px; margin-bottom: 6px; }
-  .calculator { max-width: 600px; background: #fff; padding: 20px; border-radius: 8px; border-top: 6px solid #0B3C5D; }
+  h1 { color: #0B3C5D; font-size: 22px; margin-bottom: 6px; text-align: center; }
+  h2 { font-size: 20px; color: #0B3C5D; margin-top: 0; }
+  .calculator { max-width: 700px; background: #fff; padding: 20px; border-radius: 8px; border-top: 6px solid #0B3C5D; }
   label { display: block; margin-top: 10px; font-size: 14px; }
   input, select, button { width: 100%; padding: 8px; margin-top: 6px; font-size: 14px; }
-  button { cursor: pointer; background: #0B3C5D; color: #fff; border: none; }
+  button { cursor: pointer; background: #0B3C5D; color: #fff; border: none; border-radius:4px; }
   .result { margin-top: 20px; font-size: 14px; line-height: 1.6; }
-  .package-card { background: #e8f0f8; border: 1px solid #0B3C5D; border-radius: 6px; padding: 12px; margin-bottom: 12px; }
+  .package-card, .address-card { background: #e8f0f8; border: 1px solid #0B3C5D; border-radius: 6px; padding: 12px; margin-bottom: 12px; }
   .package-card h3 { margin: 0 0 8px 0; font-size: 16px; color: #0B3C5D; }
   .quote-card { background: #f1f1f1; border: 1px solid #0B3C5D; border-radius: 6px; padding: 12px; }
   .tracking-section { margin-top: 10px; }
   .error { color: red; margin-top: 10px; font-weight: bold; }
   .add-package-btn { background: #E65100; margin-top: 10px; }
+  .field-row { display: flex; gap: 10px; }
+  .field-row input { flex: 1; }
+  details { margin-bottom: 16px; }
+  summary { cursor: pointer; font-weight: bold; }
+  .prohibited-card { background: #FFF3E0; border: 1px solid #FB8C00; border-radius: 6px; padding: 12px; margin-bottom: 12px; max-height: 250px; overflow-y: auto; }
+  img.logo { max-width: 200px; height: auto; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto; }
 </style>
 </head>
 <body>
 
-<div class="calculator">
-  <h1>MRAN LOGISTICS</h1>
-  <p>Air freight is billed using the higher of actual weight or volumetric weight. Minimum charge $15 plus $5 customs clearance.</p>
+<!-- Logo Section -->
+<img src="file-KpwuJqDYhBxtA5SkiFbq3m" alt="MRAN LOGISTICS Logo" class="logo">
 
+<h1>MRAN LOGISTICS - Air Freight Shipping Cost Calculator</h1>
+<p>Air freight is billed using the higher of actual weight or volumetric weight. Minimum charge $15</p>
+
+<details style="font-size:13px; margin-bottom:16px;"> 
+  <summary>How the calculator works</summary>
+  <p>
+    Step 1: Actual weight must be in kilograms. If weight is in pounds, divide by 2.20462.<br><br>
+    Step 2: Volumetric weight (kg) = (Length × Width × Height in inches) ÷ 366.<br><br>
+    Step 3: Chargeable weight is the higher of actual weight or volumetric weight.<br><br>
+    Step 4: Air cost = Chargeable weight × $15.<br><br>
+    <strong>Our air freight to Kenya service shipping rate is $15/KG based on the actual or volumetric weight of the package – whichever is higher. The minimum charge is $15.</strong><br><br>
+    <span style="font-size:16px; color:red; font-weight:bold;">Plus $5 customs clearance.</span>
+  </p>
+</details>
+
+<!-- Calculator Form -->
+<div class="calculator">
   <label>Client Name</label>
   <input type="text" id="clientName" placeholder="Client name" />
 
@@ -50,6 +73,64 @@
   <a id="whatsappBtn" target="_blank" style="display:none; margin-top:16px; display:block; text-align:center; background:#25D366; color:#fff; padding:10px; text-decoration:none;">
     Get Quote on WhatsApp
   </a>
+
+  <!-- Get Shipping Address -->
+  <details class="address-card">
+    <summary>Get Shipping Address</summary>
+    <p>
+      <strong>NAME:</strong> MRAN LOGISTICS<br>
+      <strong>PHONE NO:</strong> +1 657 215 7361<br>
+      <strong>ADDRESS:</strong> 17401 NICHOLS LN STE J<br>
+      <strong>CITY:</strong> HUNTINGTON BEACH<br>
+      <strong>STATE:</strong> CALIFORNIA<br>
+      <strong>ZIP CODE:</strong> 92647-8716
+    </p>
+  </details>
+
+  <!-- Prohibited Items -->
+  <details class="prohibited-card">
+    <summary>Prohibited Items</summary>
+    <p>
+      1. Powerbanks, Power Stations & loose lithium batteries<br>
+      2. Vape Pens (electronic cigarettes), Vape juice and related accessories<br>
+      3. Weapons (including camping/hunting knives or any non-kitchen knives)<br>
+      4. Cellphone batteries, camera batteries, laptop batteries or any standalone batteries<br>
+      5. Aerosol cans (This does not include body spray. We can ship body spray)<br>
+      6. Products containing concentrated alcohol<br>
+      7. Paint<br>
+      8. Fireworks, flares<br>
+      9. Pepper Spray<br>
+      10. Adult/sex toys<br>
+      11. Ammunition, Guns, Tasers, Explosives, Fireworks, Fuses, Including weapons or replicas or any weapons accessories<br>
+      12. Oxidizing substances and Organic Peroxides such as Bleach<br>
+      13. Gas cylinders/pressurized material<br>
+      14. Toxic and Infectious substances such as Pesticides, Insecticides, Mercury, Poisons etc<br>
+      15. Human or animal remains or ashes<br>
+      16. Live organisms<br>
+      17. Animal Skins, Furs, Ivory<br>
+      18. Alcoholic Beverages, tobacco or any nicotine products, rolling paper, lighters and other tobacco accessories<br>
+      19. Government, police or military boots, uniforms, IDs, military or police first-aid kits, night vision gear or related accessories<br>
+      20. Tactical clothing, gear, knives, weapons or accessories<br>
+      21. Poisonous substances<br>
+      22. All Over-The-Counter medication such as pain killers, cold & flu remedies and allergy remedies<br>
+      23. Prescription medicine<br>
+      24. Seeds, plants, fertilizers<br>
+      25. Money/Legal Tender, Currency, bank documents, Credit/Debit Cards or Gift Cards of any kind<br>
+      26. Letters, mail, legal documents or any other kind of documentation<br>
+      27. Hemp oil, CBD oil or any related products<br>
+      28. Perishable food items<br>
+      29. Lighters, butane lighters/torches, lighter fluid or matches<br>
+      30. Drones/UAVs<br>
+      31. Perfume/cologne/body mists/aftershave/body spray - Must be authentic. Factory sealed<br>
+      32. Dietary Supplements - Factory sealed and unused<br>
+      33. Protein powder and workout supplements - Factory sealed and unused<br>
+      34. Items made of glass and ceramics are highly fragile and shipped at your own risk<br>
+      35. Some goods with lithium batteries separated during packaging<br>
+      <br>
+      We reserve the right to package goods as we see fit and refuse to ship any product or shipment. Contact us for questions.
+    </p>
+  </details>
+
 </div>
 
 <script>
@@ -57,6 +138,8 @@ const RATE_PER_KG = 15;
 const USD_TO_KES = 135;
 const MIN_CHARGE = 15;
 const CLEARANCE = 5;
+
+let refCounter = 1000;
 
 function clearError(){ document.getElementById('errorMsg').innerText=''; }
 
@@ -68,15 +151,17 @@ function addPackage(){
 
   pkgDiv.innerHTML = `
     <h3>Package ${index}</h3>
-    <label>Length (inches)</label><input type="number" class="L" />
-    <label>Width (inches)</label><input type="number" class="W" />
-    <label>Height (inches)</label><input type="number" class="H" />
-    <label>Actual Weight (kg)</label><input type="number" class="A" />
+    <div class="field-row">
+      <input type="number" class="L" placeholder="Length (inches)" />
+      <input type="number" class="W" placeholder="Width (inches)" />
+      <input type="number" class="H" placeholder="Height (inches)" />
+    </div>
+    <input type="number" class="A" placeholder="Actual Weight (kg)" />
     <div class="tracking-section">
-      <label>Tracking Number</label><input type="text" class="T" placeholder="Tracking #">
-      <label>Store/Source</label><input type="text" class="S" placeholder="Store">
-      <label>Quantity</label><input type="number" class="Q" placeholder="Qty" min="1" />
-      <label>Description (max 30 chars)</label><input type="text" class="D" placeholder="Description" maxlength="30" />
+      <input type="text" class="T" placeholder="Tracking Number">
+      <input type="text" class="S" placeholder="Store/Source">
+      <input type="number" class="Q" placeholder="Quantity" min="1" />
+      <input type="text" class="D" placeholder="Description (max 30 chars)" maxlength="30" />
     </div>
   `;
   document.getElementById('packages').appendChild(pkgDiv);
@@ -124,7 +209,6 @@ function calculateCost(){
       Customs Clearance: $${CLEARANCE.toFixed(2)}<br>
       Tracking: ${T}, Store: ${S}, Qty: ${Q}, Desc: ${D}<br><br>
     `;
-
     trackingText += `Package ${i+1} - Tracking: ${T}, Store: ${S}, Qty: ${Q}, Desc: ${D}\n`;
   }
 
@@ -147,7 +231,8 @@ function calculateCost(){
   const clientName = document.getElementById('clientName').value || 'Client';
   const currency = document.getElementById('currency').value;
   const today = new Date().toLocaleDateString('en-GB');
-  const ref = 'MRAN-'+Date.now().toString().slice(-6);
+  const ref = 'MRAN-'+refCounter;
+  refCounter++;
 
   document.getElementById('result').innerHTML = `
     <div class="quote-card">
@@ -160,7 +245,7 @@ function calculateCost(){
       <strong>Total Payable:</strong> $${costUsd.toFixed(2)} / KES ${costKes.toFixed(0)}
     </div>
   `;
-
+  
   const message = `
 Hello ${clientName}
 
@@ -175,11 +260,9 @@ Date: ${today}
 Reference: ${ref}
 `;
 
-  const phone = '254725041080';
-  const whatsappLink = 'https://wa.me/'+phone+'?text='+encodeURIComponent(message);
   const whatsappBtn = document.getElementById('whatsappBtn');
-  whatsappBtn.href = whatsappLink;
   whatsappBtn.style.display='block';
+  whatsappBtn.href='#'; 
 
   const copyBtn = document.getElementById('copyBtn');
   copyBtn.style.display='block';
