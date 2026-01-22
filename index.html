@@ -29,7 +29,7 @@
       font-size: 14px;
     }
 
-    input {
+    input, select {
       width: 100%;
       padding: 8px;
       margin-top: 6px;
@@ -75,6 +75,7 @@
         Plus $5 customs clearance.
       </p>
     </details>
+
     <h2>Air Freight Shipping Cost Calculator</h2>
 
     <label>Length (inches)</label>
@@ -105,6 +106,8 @@
     <button onclick="calculateCost()">Calculate Cost</button>
 
     <div class="result" id="result"></div>
+
+    <button id="copyBtn" style="display:none; margin-top:10px; background:#0B3C5D;">Copy Quote</button>
 
     <a id="whatsappBtn" target="_blank" style="display:none; margin-top:16px; display:block; text-align:center; background:#25D366; color:#ffffff; padding:10px; text-decoration:none;">
       Get Quote on WhatsApp
@@ -145,10 +148,7 @@
       }
 
       const costKes = (costUsd * usdToKes) + deliveryKes;
-
       const currency = document.getElementById('currency').value;
-
-      const chargeableDisplay = `<span style="color:#0a7cff; font-weight:bold;">${chargeable.toFixed(2)} kg</span>`;
 
       let deliveryBreakdown = 'No delivery selected';
 
@@ -157,39 +157,29 @@
           deliveryBreakdown = 'First 5 kg: KES 450';
         } else {
           const extraKg = chargeable - 5;
-          deliveryBreakdown = `First 5 kg: KES 450<br>Additional ${extraKg.toFixed(2)} kg × 75 = KES ${(extraKg * 75).toFixed(0)}`;
+          deliveryBreakdown = 'First 5 kg: KES 450<br>Additional ' + extraKg.toFixed(2) + ' kg × 75 = KES ' + (extraKg * 75).toFixed(0);
         }
       }
 
       let resultText = '';
 
       if (currency === 'USD') {
-        resultText = `
-          Volumetric Weight: ${volumetric.toFixed(2)} kg<br>
-          Chargeable Weight: ${chargeableDisplay}<br>
-          Air Freight + Clearance: $${costUsd.toFixed(2)}<br>
-          Delivery: KES ${deliveryKes.toFixed(0)}<br>
-          <small>${deliveryBreakdown}</small><br>
-          <strong>Total Payable: KES ${costKes.toFixed(0)}</strong>
-        `;
+        resultText = 'Volumetric Weight: ' + volumetric.toFixed(2) + ' kg<br>' +
+          'Chargeable Weight: <strong>' + chargeable.toFixed(2) + ' kg</strong><br>' +
+          'Air Freight + Clearance: $' + costUsd.toFixed(2) + '<br>' +
+          'Delivery: KES ' + deliveryKes.toFixed(0) + '<br>' +
+          '<small>' + deliveryBreakdown + '</small><br>' +
+          '<strong>Total Payable: KES ' + costKes.toFixed(0) + '</strong>';
       } else {
-        resultText = `
-          Volumetric Weight: ${volumetric.toFixed(2)} kg<br>
-          Chargeable Weight: ${chargeableDisplay}<br>
-          Air Freight + Clearance: KES ${(costUsd * usdToKes).toFixed(0)}<br>
-          Delivery: KES ${deliveryKes.toFixed(0)}<br>
-          <small>${deliveryBreakdown}</small><br>
-          <strong>Total Payable: KES ${costKes.toFixed(0)}</strong>
-        `;
+        resultText = 'Volumetric Weight: ' + volumetric.toFixed(2) + ' kg<br>' +
+          'Chargeable Weight: <strong>' + chargeable.toFixed(2) + ' kg</strong><br>' +
+          'Air Freight + Clearance: KES ' + (costUsd * usdToKes).toFixed(0) + '<br>' +
+          'Delivery: KES ' + deliveryKes.toFixed(0) + '<br>' +
+          '<small>' + deliveryBreakdown + '</small><br>' +
+          '<strong>Total Payable: KES ' + costKes.toFixed(0) + '</strong>';
       }
 
-      let minimumNote = '';
-
-      if ((chargeable * ratePerKg) < minimumCharge) {
-        minimumNote = '<br><strong>Minimum charge applied</strong>';
-      }
-
-      document.getElementById('result').innerHTML = resultText + minimumNote;
+      document.getElementById('result').innerHTML = resultText;
 
       const clientName = document.getElementById('clientName').value || 'Client';
       const today = new Date().toLocaleDateString('en-GB');
@@ -207,21 +197,31 @@
       }
 
       const message =
-        'Hello ' + clientName + '%0A%0A' +
-        'Our air freight to Kenya service shipping rate is $15/KG based on the actual or volumetric weight of the package – whichever is higher.%0A' +
-        'The minimum charge is $15.%0A' +
-        'Plus $5 customs clearance.%0A%0A' +
-        'Chargeable Weight: ' + chargeable.toFixed(2) + ' kg%0A' +
-        deliveryText + '%0A' +
-        'Total Cost: $' + costUsd.toFixed(2) + ' (' + costKes.toFixed(0) + ' KES)%0A%0A' +
-        'Date: ' + today + '%0A' +
+        'Hello ' + clientName + '\n\n' +
+        'Our air freight to Kenya service shipping rate is $15/KG based on the actual or volumetric weight of the package – whichever is higher.\n' +
+        'The minimum charge is $15.\n' +
+        'Plus $5 customs clearance.\n\n' +
+        'Chargeable Weight: ' + chargeable.toFixed(2) + ' kg\n' +
+        deliveryText + '\n' +
+        'Total Cost: $' + costUsd.toFixed(2) + ' (' + costKes.toFixed(0) + ' KES)\n\n' +
+        'Date: ' + today + '\n' +
         'Reference: ' + ref;
+
+      const encodedMessage = encodeURIComponent(message);
       const phone = '254725041080';
-      const whatsappLink = `https://wa.me/${phone}?text=${message}`;
+      const whatsappLink = 'https://wa.me/' + phone + '?text=' + encodedMessage;
 
       const btn = document.getElementById('whatsappBtn');
+      const copyBtn = document.getElementById('copyBtn');
+
       btn.href = whatsappLink;
       btn.style.display = 'block';
+      copyBtn.style.display = 'block';
+
+      copyBtn.onclick = function () {
+        navigator.clipboard.writeText(message);
+        copyBtn.innerText = 'Copied';
+      };
     }
   </script>
 
