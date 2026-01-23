@@ -4,273 +4,249 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MRAN Logistics - Air Freight Calculator</title>
+
 <style>
-  body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
-  h1 { color: #0B3C5D; font-size: 22px; margin-bottom: 6px; text-align: center; }
-  h2 { font-size: 20px; color: #0B3C5D; margin-top: 0; }
-  .calculator { max-width: 700px; background: #fff; padding: 20px; border-radius: 8px; border-top: 6px solid #0B3C5D; }
-  label { display: block; margin-top: 10px; font-size: 14px; }
-  input, select, button { width: 100%; padding: 8px; margin-top: 6px; font-size: 14px; }
-  button { cursor: pointer; background: #0B3C5D; color: #fff; border: none; border-radius:4px; }
-  .result { margin-top: 20px; font-size: 14px; line-height: 1.6; }
-  .package-card, .address-card { background: #e8f0f8; border: 1px solid #0B3C5D; border-radius: 6px; padding: 12px; margin-bottom: 12px; }
-  .package-card h3 { margin: 0 0 8px 0; font-size: 16px; color: #0B3C5D; }
-  .quote-card { background: #f1f1f1; border: 1px solid #0B3C5D; border-radius: 6px; padding: 12px; }
-  .tracking-section { margin-top: 10px; }
-  .error { color: red; margin-top: 10px; font-weight: bold; }
-  .add-package-btn { background: #E65100; margin-top: 10px; }
-  .field-row { display: flex; gap: 10px; }
-  .field-row input { flex: 1; }
-  details { margin-bottom: 16px; }
-  summary { cursor: pointer; font-weight: bold; }
-  .prohibited-card { background: #FFF3E0; border: 1px solid #FB8C00; border-radius: 6px; padding: 12px; margin-bottom: 12px; max-height: 250px; overflow-y: auto; }
-  img.logo { max-width: 200px; height: auto; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto; }
+body { font-family: Arial, sans-serif; background:#f5f5f5; padding:20px; }
+h1 { color:#0B3C5D; font-size:22px; text-align:center; }
+.calculator { max-width:750px; background:#fff; padding:20px; border-radius:8px; border-top:6px solid #0B3C5D; margin:auto; }
+label { display:block; margin-top:10px; font-size:14px; }
+input, select, button { width:100%; padding:8px; margin-top:6px; font-size:14px; }
+button { background:#0B3C5D; color:#fff; border:none; cursor:pointer; border-radius:4px; }
+.add-package-btn { background:#E65100; margin-top:10px; }
+.result { margin-top:20px; font-size:14px; line-height:1.6; }
+.package-card, .address-card { background:#e8f0f8; border:1px solid #0B3C5D; border-radius:6px; padding:12px; margin-bottom:12px; }
+.quote-card { background:#f1f1f1; border:1px solid #0B3C5D; border-radius:6px; padding:12px; }
+.field-row { display:flex; gap:10px; }
+.field-row input { flex:1; }
+.error { color:red; font-weight:bold; margin-top:10px; }
+details { margin-bottom:16px; }
+summary { cursor:pointer; font-weight:bold; }
+.prohibited-card { background:#FFF3E0; border:1px solid #FB8C00; border-radius:6px; padding:12px; max-height:260px; overflow-y:auto; }
+img.logo { max-width:200px; display:block; margin:0 auto 20px; }
 </style>
 </head>
+
 <body>
 
-<!-- Logo Section -->
-<img src="logo-transparent.png" alt="MRAN LOGISTICS Logo" class="logo">
+<img src="logo-transparent.png" class="logo" alt="MRAN LOGISTICS">
 
+<h1>MRAN LOGISTICS – Air Freight Shipping Cost Calculator</h1>
 
-<h1>MRAN LOGISTICS - Air Freight Shipping Cost Calculator</h1>
-<p>Air freight is billed using the higher of actual weight or volumetric weight. Minimum charge $15</p>
-
-<details style="font-size:13px; margin-bottom:16px;"> 
-  <summary>How the calculator works</summary>
-  <p>
-    Step 1: Actual weight must be in kilograms. If weight is in pounds, divide by 2.20462.<br><br>
-    Step 2: Volumetric weight (kg) = (Length × Width × Height in inches) ÷ 366.<br><br>
-    Step 3: Chargeable weight is the higher of actual weight or volumetric weight.<br><br>
-    Step 4: Air cost = Chargeable weight × $15.<br><br>
-    <strong>Our air freight to Kenya service shipping rate is $15/KG based on the actual or volumetric weight of the package – whichever is higher. The minimum charge is $15.</strong><br><br>
-    <span style="font-size:16px; color:red; font-weight:bold;">Plus $5 customs clearance.</span>
-  </p>
+<details style="font-size:13px;">
+<summary>How the calculator works</summary>
+<p>
+Step 1: Actual weight must be in kilograms. If weight is in pounds, divide by 2.20462.<br><br>
+Step 2: Volumetric weight (kg) = (Length × Width × Height in inches) ÷ 366.<br><br>
+Step 3: Chargeable weight is the higher of actual weight or volumetric weight.<br><br>
+Step 4: Air cost = Chargeable weight × $15.<br><br>
+Our air freight to Kenya service shipping rate is $15/KG based on the actual or volumetric weight of the package – whichever is higher. The minimum charge is $15.<br><br>
+<strong>Plus $5 customs clearance.</strong>
+</p>
 </details>
 
-<!-- Calculator Form -->
 <div class="calculator">
-  <label>Client Name</label>
-  <input type="text" id="clientName" placeholder="Client name" />
 
-  <label>
-    <input type="checkbox" id="homeDelivery" /> Add Home Delivery
-  </label>
+<label>Client Name</label>
+<input type="text" id="clientName" placeholder="Client name">
 
-  <label>Display Currency</label>
-  <select id="currency">
-    <option value="USD">USD</option>
-    <option value="KES">KES</option>
-  </select>
+<label><input type="checkbox" id="homeDelivery"> Add Home Delivery</label>
 
-  <div id="packages"></div>
-  <button type="button" class="add-package-btn" onclick="addPackage()">+ Add Package</button>
+<label>Display Currency</label>
+<select id="currency">
+<option value="USD">USD</option>
+<option value="KES">KES</option>
+</select>
 
-  <button type="button" onclick="calculateCost()">Calculate Cost</button>
-  <div class="error" id="errorMsg"></div>
-  <div class="result" id="result"></div>
+<div id="packages"></div>
 
-  <button id="copyBtn" style="display:none; margin-top:10px;">Copy Quote</button>
-  <a id="whatsappBtn" target="_blank" style="display:none; margin-top:16px; display:block; text-align:center; background:#25D366; color:#fff; padding:10px; text-decoration:none;">
-    Get Quote on WhatsApp
-  </a>
+<button class="add-package-btn" onclick="addPackage()">+ Add Package</button>
+<button onclick="calculateCost()">Calculate Cost</button>
 
-  <!-- Get Shipping Address -->
-  <details class="address-card">
-    <summary>Get Shipping Address</summary>
-    <p>
-      <strong>NAME:</strong> MRAN LOGISTICS<br>
-      <strong>PHONE NO:</strong> +1 657 215 7361<br>
-      <strong>ADDRESS:</strong> 17401 NICHOLS LN STE J<br>
-      <strong>CITY:</strong> HUNTINGTON BEACH<br>
-      <strong>STATE:</strong> CALIFORNIA<br>
-      <strong>ZIP CODE:</strong> 92647-8716
-    </p>
-  </details>
+<div class="error" id="errorMsg"></div>
+<div class="result" id="result"></div>
 
-  <!-- Prohibited Items -->
-  <details class="prohibited-card">
-    <summary>Prohibited Items</summary>
-    <p>
-      1. Powerbanks, Power Stations & loose lithium batteries<br>
-      2. Vape Pens (electronic cigarettes), Vape juice and related accessories<br>
-      3. Weapons (including camping/hunting knives or any non-kitchen knives)<br>
-      4. Cellphone batteries, camera batteries, laptop batteries or any standalone batteries<br>
-      5. Aerosol cans (This does not include body spray. We can ship body spray)<br>
-      6. Products containing concentrated alcohol<br>
-      7. Paint<br>
-      8. Fireworks, flares<br>
-      9. Pepper Spray<br>
-      10. Adult/sex toys<br>
-      11. Ammunition, Guns, Tasers, Explosives, Fireworks, Fuses, Including weapons or replicas or any weapons accessories<br>
-      12. Oxidizing substances and Organic Peroxides such as Bleach<br>
-      13. Gas cylinders/pressurized material<br>
-      14. Toxic and Infectious substances such as Pesticides, Insecticides, Mercury, Poisons etc<br>
-      15. Human or animal remains or ashes<br>
-      16. Live organisms<br>
-      17. Animal Skins, Furs, Ivory<br>
-      18. Alcoholic Beverages, tobacco or any nicotine products, rolling paper, lighters and other tobacco accessories<br>
-      19. Government, police or military boots, uniforms, IDs, military or police first-aid kits, night vision gear or related accessories<br>
-      20. Tactical clothing, gear, knives, weapons or accessories<br>
-      21. Poisonous substances<br>
-      22. All Over-The-Counter medication such as pain killers, cold & flu remedies and allergy remedies<br>
-      23. Prescription medicine<br>
-      24. Seeds, plants, fertilizers<br>
-      25. Money/Legal Tender, Currency, bank documents, Credit/Debit Cards or Gift Cards of any kind<br>
-      26. Letters, mail, legal documents or any other kind of documentation<br>
-      27. Hemp oil, CBD oil or any related products<br>
-      28. Perishable food items<br>
-      29. Lighters, butane lighters/torches, lighter fluid or matches<br>
-      30. Drones/UAVs<br>
-      31. Perfume/cologne/body mists/aftershave/body spray - Must be authentic. Factory sealed<br>
-      32. Dietary Supplements - Factory sealed and unused<br>
-      33. Protein powder and workout supplements - Factory sealed and unused<br>
-      34. Items made of glass and ceramics are highly fragile and shipped at your own risk<br>
-      35. Some goods with lithium batteries separated during packaging<br>
-      <br>
-      We reserve the right to package goods as we see fit and refuse to ship any product or shipment. Contact us for questions.
-    </p>
-  </details>
+<button id="copyBtn" style="display:none;margin-top:10px;">Copy Quote</button>
+
+<a id="whatsappBtn" href="#" style="display:none;margin-top:16px;display:block;text-align:center;background:#25D366;color:#fff;padding:10px;text-decoration:none;">
+Get Quote on WhatsApp
+</a>
+
+<details class="address-card">
+<summary>Get Shipping Address</summary>
+<p>
+<strong>NAME:</strong> MRAN LOGISTICS<br>
+<strong>PHONE:</strong> +1 657 215 7361<br>
+<strong>ADDRESS:</strong> 17401 Nichols Ln Ste J<br>
+<strong>CITY:</strong> Huntington Beach<br>
+<strong>STATE:</strong> California<br>
+<strong>ZIP:</strong> 92647
+</p>
+</details>
+
+<details class="prohibited-card">
+<summary>Prohibited Items</summary>
+<p>
+1. Powerbanks, Power Stations & loose lithium batteries<br>
+2. Vape Pens, vape juice and accessories<br>
+3. Weapons including knives (non-kitchen)<br>
+4. Standalone phone, camera or laptop batteries<br>
+5. Aerosol cans (excluding body spray)<br>
+6. Concentrated alcohol products<br>
+7. Paint<br>
+8. Fireworks, flares<br>
+9. Pepper spray<br>
+10. Adult/sex toys<br>
+11. Ammunition, guns, tasers, explosives or replicas<br>
+12. Oxidizing substances (bleach, peroxides)<br>
+13. Gas cylinders / pressurized materials<br>
+14. Toxic & infectious substances<br>
+15. Human or animal remains or ashes<br>
+16. Live organisms<br>
+17. Animal skins, furs, ivory<br>
+18. Alcohol, tobacco, nicotine products<br>
+19. Military or police uniforms or gear<br>
+20. Tactical clothing or accessories<br>
+21. Poisonous substances<br>
+22. Over-the-counter medication<br>
+23. Prescription medicine<br>
+24. Seeds, plants, fertilizers<br>
+25. Money, currency, legal documents<br>
+26. Letters or mail<br>
+27. Hemp oil, CBD products<br>
+28. Perishable food items<br>
+29. Lighters, matches, butane torches<br>
+30. Drones / UAVs<br>
+31. Perfumes (factory sealed only)<br>
+32. Dietary supplements (factory sealed)<br>
+33. Protein & workout supplements<br>
+34. Glass & ceramic items (ship at own risk)<br>
+35. Items containing lithium batteries separated during packing
+</p>
+</details>
 
 </div>
 
 <script>
-const RATE_PER_KG = 15;
-const USD_TO_KES = 135;
-const MIN_CHARGE = 15;
-const CLEARANCE = 5;
-
-let refCounter = 1000;
-
-function clearError(){ document.getElementById('errorMsg').innerText=''; }
+const RATE=15, MIN=15, CLEARANCE=5, USDKES=135;
+let refCounter=1000;
 
 function addPackage(){
-  const pkgDiv = document.createElement('div');
-  pkgDiv.className = 'package-card package';
-
-  const index = document.querySelectorAll('#packages .package').length + 1;
-
-  pkgDiv.innerHTML = `
-    <h3>Package ${index}</h3>
+  const d=document.createElement('div');
+  d.className='package-card package';
+  const i=document.querySelectorAll('.package').length+1;
+  d.innerHTML=`
+    <h3>Package ${i}</h3>
     <div class="field-row">
-      <input type="number" class="L" placeholder="Length (inches)" />
-      <input type="number" class="W" placeholder="Width (inches)" />
-      <input type="number" class="H" placeholder="Height (inches)" />
+      <input class="L" type="number" placeholder="Length (inches)">
+      <input class="W" type="number" placeholder="Width (inches)">
+      <input class="H" type="number" placeholder="Height (inches)">
     </div>
-    <input type="number" class="A" placeholder="Actual Weight (kg)" />
-    <div class="tracking-section">
-      <input type="text" class="T" placeholder="Tracking Number">
-      <input type="text" class="S" placeholder="Store/Source">
-      <input type="number" class="Q" placeholder="Quantity" min="1" />
-      <input type="text" class="D" placeholder="Description (max 30 chars)" maxlength="30" />
-    </div>
+    <input class="A" type="number" placeholder="Actual Weight (kg)">
+    <input class="T" placeholder="Tracking Number">
+    <input class="S" placeholder="Store / Source">
+    <input class="Q" type="number" placeholder="Quantity" min="1">
+    <input class="D" maxlength="30" placeholder="Description (max 30 chars)">
   `;
-  document.getElementById('packages').appendChild(pkgDiv);
+  packages.appendChild(d);
 }
-
-function showError(msg){ document.getElementById('errorMsg').innerText = msg; }
 
 function calculateCost(){
-  clearError();
-  const packages = document.querySelectorAll('#packages .package');
-  if(packages.length===0){ showError('Add at least one package'); return; }
+  errorMsg.innerText='';
+  const pkgs=document.querySelectorAll('.package');
+  if(!pkgs.length){ errorMsg.innerText='Add at least one package'; return; }
 
-  let totalChargeable = 0;
-  let totalAirUSD = 0;
-  let breakdownHtml = '';
-  let trackingText = '';
+  let totalChargeable=0, totalAir=0, breakdown='', tracking='';
 
-  for(let i=0;i<packages.length;i++){
-    const pkg = packages[i];
-    const L = Number(pkg.querySelector('.L').value);
-    const W = Number(pkg.querySelector('.W').value);
-    const H = Number(pkg.querySelector('.H').value);
-    const A = Number(pkg.querySelector('.A').value);
-    const T = pkg.querySelector('.T').value.trim() || 'Pending';
-    const S = pkg.querySelector('.S').value.trim() || 'N/A';
-    const Q = Number(pkg.querySelector('.Q').value) || 1;
-    const D = pkg.querySelector('.D').value.trim() || '';
+  pkgs.forEach((p,i)=>{
+    const L=+p.querySelector('.L').value,
+          W=+p.querySelector('.W').value,
+          H=+p.querySelector('.H').value,
+          A=+p.querySelector('.A').value,
+          T=p.querySelector('.T').value||'Pending',
+          S=p.querySelector('.S').value||'N/A',
+          Q=p.querySelector('.Q').value||1,
+          D=p.querySelector('.D').value||'';
 
-    if(!L||!W||!H||!A||A<=0){ showError('Fill all fields correctly for each package'); return; }
+    if(!L||!W||!H||!A){ errorMsg.innerText='Fill all package fields'; return; }
 
-    const volumetric = (L*W*H)/366;
-    const chargeable = Math.max(A, volumetric);
-    const airFreight = Math.max(chargeable*RATE_PER_KG, MIN_CHARGE);
+    const vol=(L*W*H)/366;
+    const ch=Math.max(A,vol);
+    const air=Math.max(ch*RATE,MIN);
 
-    totalChargeable += chargeable;
-    totalAirUSD += airFreight;
+    totalChargeable+=ch;
+    totalAir+=air;
 
-    breakdownHtml += `
-      <strong>Package ${i+1}</strong><br>
-      Weight: ${A.toFixed(2)} KG<br>
-      Dimensions: ${L.toFixed(2)} x ${W.toFixed(2)} x ${H.toFixed(2)} inches<br>
-      Volumetric Weight: ${volumetric.toFixed(2)} KG<br>
-      Chargeable Weight: ${chargeable.toFixed(2)} KG<br>
-      Air Freight: $${airFreight.toFixed(2)} (Minimum $${MIN_CHARGE})<br>
-      Customs Clearance: $${CLEARANCE.toFixed(2)}<br>
-      Tracking: ${T}, Store: ${S}, Qty: ${Q}, Desc: ${D}<br><br>
-    `;
-    trackingText += `Package ${i+1} - Tracking: ${T}, Store: ${S}, Qty: ${Q}, Desc: ${D}\n`;
-  }
+    breakdown+=`
+Package ${i+1}
+Weight: ${A.toFixed(2)} KG
+Dimensions: ${L} x ${W} x ${H} inches
+Volumetric Weight: ${vol.toFixed(2)} KG
+Chargeable Weight: ${ch.toFixed(2)} KG
+Air Freight: $${air.toFixed(2)}
+Customs Clearance: $${CLEARANCE.toFixed(2)}
+Tracking: ${T}, Store: ${S}, Qty: ${Q}, Desc: ${D}
 
-  let deliveryKes = 0;
-  let deliveryBreakdown='';
-  if(document.getElementById('homeDelivery').checked){
-    if(totalChargeable<=5){ 
-      deliveryKes=450; 
-      deliveryBreakdown='Delivery: First 5 kg = KES450'; 
-    } else { 
-      const extra = totalChargeable-5; 
-      deliveryKes = 450 + extra*75; 
-      deliveryBreakdown=`Delivery: First 5kg=KES450, Extra ${extra.toFixed(2)}kg ×75=KES${(extra*75).toFixed(0)}`; 
-    }
-  } else { deliveryBreakdown='No home delivery'; }
-
-  const costUsd = totalAirUSD + CLEARANCE;
-  const costKes = costUsd*USD_TO_KES + deliveryKes;
-
-  const clientName = document.getElementById('clientName').value || 'Client';
-  const currency = document.getElementById('currency').value;
-  const today = new Date().toLocaleDateString('en-GB');
-  const ref = 'MRAN-'+refCounter;
-  refCounter++;
-
-  document.getElementById('result').innerHTML = `
-    <div class="quote-card">
-      <h3>Shipping Quote</h3>
-      <strong>Client:</strong> ${clientName}<br>
-      <strong>Date:</strong> ${today}<br>
-      <strong>Reference:</strong> ${ref}<br><br>
-      ${breakdownHtml}
-      <strong>${deliveryBreakdown}</strong><br>
-      <strong>Total Payable:</strong> $${costUsd.toFixed(2)} / KES ${costKes.toFixed(0)}
-    </div>
-  `;
-  
-  const message = `
-Hello ${clientName}
-
-${breakdownHtml.replace(/<br>/g,'\n')}
-${deliveryBreakdown}
-Total Cost: $${costUsd.toFixed(2)} / KES ${costKes.toFixed(0)}
-
-Tracking Info:
-${trackingText}
-
-Date: ${today}
-Reference: ${ref}
 `;
 
-  const whatsappBtn = document.getElementById('whatsappBtn');
-  whatsappBtn.style.display='block';
-  whatsappBtn.href='#'; 
+    tracking+=`Package ${i+1} - ${T}\n`;
+  });
 
-  const copyBtn = document.getElementById('copyBtn');
+  let deliveryKes=0, deliveryText='No home delivery';
+  if(homeDelivery.checked){
+    if(totalChargeable<=5){
+      deliveryKes=450;
+      deliveryText='Delivery: First 5kg = KES450';
+    } else {
+      const extra=totalChargeable-5;
+      deliveryKes=450+extra*75;
+      deliveryText=`Delivery: First 5kg=KES450, Extra ${extra.toFixed(2)}kg ×75=KES${(extra*75).toFixed(0)}`;
+    }
+  }
+
+  const usd=totalAir+CLEARANCE;
+  const kes=usd*USDKES+deliveryKes;
+  const client=clientName.value||'Client';
+  const date=new Date().toLocaleDateString('en-GB');
+  const ref='MRAN-'+refCounter++;
+
+  result.innerHTML=`
+<div class="quote-card">
+<strong>Client:</strong> ${client}<br>
+<strong>Date:</strong> ${date}<br>
+<strong>Reference:</strong> ${ref}<br><br>
+${breakdown.replace(/\n/g,'<br>')}
+${deliveryText}<br>
+<strong>Total Payable:</strong> $${usd.toFixed(2)} / KES ${kes.toFixed(0)}
+</div>`;
+
+  const msg=`Shipping Quote
+Client: ${client}
+Date: ${date}
+Reference: ${ref}
+
+${breakdown}
+${deliveryText}
+Total Payable: $${usd.toFixed(2)} / KES ${kes.toFixed(0)}`;
+
+  whatsappBtn.style.display='block';
+  whatsappBtn.onclick=e=>{
+    e.preventDefault();
+    window.open('https://wa.me/254725041080?text='+encodeURIComponent(msg),'_blank');
+  };
+
   copyBtn.style.display='block';
-  copyBtn.onclick = ()=>{ navigator.clipboard.writeText(message); copyBtn.innerText='Copied!'; setTimeout(()=>{copyBtn.innerText='Copy Quote';},2000); };
+  copyBtn.onclick=()=>{
+    const t=document.createElement('textarea');
+    t.value=msg;
+    document.body.appendChild(t);
+    t.select();
+    document.execCommand('copy');
+    document.body.removeChild(t);
+    copyBtn.innerText='Copied!';
+    setTimeout(()=>copyBtn.innerText='Copy Quote',2000);
+  };
 }
 
-// Add first package by default
 addPackage();
 </script>
 
